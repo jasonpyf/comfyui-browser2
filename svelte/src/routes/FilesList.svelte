@@ -219,9 +219,13 @@
 </button>
 {/if}
 
+<div on:click={() => uploadModal.showModal()}>
+  点击
+</div>
+
 <!-- Open the modal using ID.showModal() method -->
 <dialog class="modal" bind:this={uploadModal}>
-  <div class="space-y-4">
+  <div class="border-white border-2 px-5 py-5 w-1/2 space-y-4">
     <div class="form-control w-full max-w-2xl">
       <div class="label">
         <span class="label-text">* Download URL</span>
