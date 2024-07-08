@@ -24,6 +24,7 @@
   let files: Array<any> = [];
   let loaded: boolean = true;
   let uploadModal: any;
+  let downloadUrl = '';
   let showCursor = 20;
   let searchQuery = '';
   let searchRegex = new RegExp('');
@@ -221,6 +222,28 @@
 <!-- Open the modal using ID.showModal() method -->
 <dialog class="modal" bind:this={uploadModal}>
   <form method="dialog" class="modal-backdrop">
+    <div class="form-control w-full max-w-2xl">
+      <div class="label">
+        <span class="label-text">* Download URL</span>
+      </div>
+      <input
+        type="text"
+        placeholder="https://civitai.com/api/download/models/35516"
+        class="input input-bordered w-full max-w-2xl"
+        bind:value={downloadUrl}
+      />
+    </div>
+    <div class="form-control w-full max-w-2xl">
+      <div class="label">
+        <span class="label-text">* Download URL</span>
+      </div>
+      <input
+        type="text"
+        placeholder="https://civitai.com/api/download/models/35516"
+        class="input input-bordered w-full max-w-2xl"
+        bind:value={downloadUrl}
+      />
+    </div>
     <button>close</button>
   </form>
 </dialog>
