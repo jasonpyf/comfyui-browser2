@@ -259,5 +259,17 @@
         bind:value={downloadUrl}
       />
     </div>
+    <button
+      class="btn btn-secondary btn-outline w-36"
+      on:click={() => uploadModal.close()}
+    >
+      上传
+    </button>
+    <button
+      class="btn btn-secondary btn-outline w-36"
+      on:click={() => uploadModal.close()}
+    >
+      取消
+    </button>
   </div>
 </dialog>
