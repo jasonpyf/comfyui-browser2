@@ -24,11 +24,20 @@
   let files: Array<any> = [];
   let loaded: boolean = true;
   let uploadModal: any;
-  let downloadUrl = '';
   let showCursor = 20;
   let searchQuery = '';
   let searchRegex = new RegExp('');
   let scrollTop = 0;
+
+  /** 表单项 **/
+  let name: any;
+  let gameId: any;
+  let tags: any;
+
+  const games = [
+    { text: '牛马', value: 1 },
+    { text: '云海', value: 2 },
+  ];
 
   $: tt = function(key: string) {
     return $t('filesList.' + key);
@@ -225,38 +234,38 @@
 
 <!-- Open the modal using ID.showModal() method -->
 <dialog class="modal" bind:this={uploadModal}>
-  <div class="border-white border-2 px-5 py-5 w-1/2 space-y-4" style="background-color: #353535;">
+  <div class="border-gray-300 border-2 px-5 py-5 w-1/2 space-y-4" style="background-color: #353535;">
     <div class="form-control w-full max-w-2xl">
       <div class="label">
         <span class="label-text">* 素材名称</span>
       </div>
       <input
         type="text"
-        placeholder="https://civitai.com/api/download/models/35516"
         class="input input-bordered w-full max-w-2xl"
-        bind:value={downloadUrl}
+        bind:value={name}
       />
+    </div>
+    <div class="form-control w-full">
+      <div class="label">
+        <span class="label-text">* 游戏项目</span>
+      </div>
+      <select
+        class="select select-bordered max-w-xs"
+        bind:value={gameId}
+      >
+        {#each games as game}
+          <option value={game.value}>{game.text}</option>
+        {/each}
+      </select>
     </div>
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text">* 项目</span>
+        <span class="label-text">* 标签(多个标签按照逗号分割)</span>
       </div>
       <input
         type="text"
-        placeholder="https://civitai.com/api/download/models/35516"
         class="input input-bordered w-full max-w-2xl"
-        bind:value={downloadUrl}
-      />
-    </div>
-    <div class="form-control w-full max-w-2xl">
-      <div class="label">
-        <span class="label-text">* 标签</span>
-      </div>
-      <input
-        type="text"
-        placeholder="https://civitai.com/api/download/models/35516"
-        class="input input-bordered w-full max-w-2xl"
-        bind:value={downloadUrl}
+        bind:value={tags}
       />
     </div>
     <button
