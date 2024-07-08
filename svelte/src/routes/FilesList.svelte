@@ -23,6 +23,7 @@
   let comfyApp: any;
   let files: Array<any> = [];
   let loaded: boolean = true;
+  let uploadModal: any;
   let showCursor = 20;
   let searchQuery = '';
   let searchRegex = new RegExp('');
@@ -163,6 +164,11 @@
               on:click={async () => await onLoadWorkflow(file, comfyApp, toast)}
               >{$t('common.btn.load')}</button
             >
+            <button
+              class="btn btn-link btn-sm p-0 no-underline text-accent"
+              on:click={() => uploadModal.showModal()}
+              >{$t('common.btn.upload')}</button
+            >
           {/if}
           <button
             class="btn btn-link btn-sm p-0 no-underline text-accent"
@@ -211,3 +217,10 @@
   </svg>
 </button>
 {/if}
+
+<!-- Open the modal using ID.showModal() method -->
+<dialog class="modal" bind:this={uploadModal}>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

@@ -12,6 +12,7 @@
     "btn": {
       "load": "Load",
       "save": "Save",
+      "upload": "Upload",
       "delete": "Delete",
       "add": "Add",
       "refresh": "Refresh"
