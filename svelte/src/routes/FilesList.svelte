@@ -225,10 +225,10 @@
 
 <!-- Open the modal using ID.showModal() method -->
 <dialog class="modal" bind:this={uploadModal}>
-  <div class="border-white border-2 px-5 py-5 w-1/2 space-y-4">
+  <div class="border-white border-2 px-5 py-5 w-1/2 space-y-4" style="background-color: #353535;">
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text">* Download URL</span>
+        <span class="label-text">* 素材名称</span>
       </div>
       <input
         type="text"
@@ -239,7 +239,18 @@
     </div>
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text">* Download URL</span>
+        <span class="label-text">* 项目</span>
+      </div>
+      <input
+        type="text"
+        placeholder="https://civitai.com/api/download/models/35516"
+        class="input input-bordered w-full max-w-2xl"
+        bind:value={downloadUrl}
+      />
+    </div>
+    <div class="form-control w-full max-w-2xl">
+      <div class="label">
+        <span class="label-text">* 标签</span>
       </div>
       <input
         type="text"
