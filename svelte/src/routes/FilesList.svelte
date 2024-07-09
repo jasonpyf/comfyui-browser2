@@ -98,15 +98,16 @@
       toast.show(false, "", "制作人不能为空！");
       return;
     }
-    const file = await fetch(comfyUrl + currentFile.url);
-    const fileData = await file.blob();
+    const fileData = await fetch(comfyUrl + currentFile.url);
+    const fileBlob = await fileData.blob();
+    const file = new File([fileBlob], currentFile.name, { type: fileBlob.type });
     console.log(fileData)
     const formData = new FormData();
     formData.append('name', name); 
     formData.append('gameId', gameId); 
     formData.append('nickname', userId); 
     formData.append('tags', tags); 
-    formData.append('file', fileData); 
+    formData.append('file', file); 
     const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
       method: 'POST',
       headers: {
