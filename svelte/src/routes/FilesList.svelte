@@ -99,8 +99,15 @@
       return;
     }
     const fileData = await fetch(comfyUrl + currentFile.url);
-    const array = await fileData.arrayBuffer();
-    const file = new File([array], currentFile.name, { type: currentFile.type });
+    if (!fileData.body) {
+      return;
+    }
+    const array = await fileData.body.getReader().read();
+    if (!array.value) {
+      return;
+    }
+    const blob = new Blob([array.value], {type: currentFile.type});
+    const file = new File([blob], currentFile.name, { type: currentFile.type });
     console.log(fileData)
     const formData = new FormData();
     formData.append('name', name); 
