@@ -23,6 +23,7 @@
   let comfyApp: any;
   let files: Array<any> = [];
   let loaded: boolean = true;
+  let uploadUrl = "http://nuwa.datawing.qcwanwan.com";
   let uploadModal: any;
   let showCursor = 20;
   let searchQuery = '';
@@ -30,14 +31,14 @@
   let scrollTop = 0;
 
   /** 表单项 **/
+  let currentFile: any;
   let name: any;
   let gameId: any;
+  let userId: any;
   let tags: any;
 
-  const games = [
-    { text: '牛马', value: 1 },
-    { text: '云海', value: 2 },
-  ];
+  let users: any[] = [];
+  let games:any[] = [];
 
   $: tt = function(key: string) {
     return $t('filesList.' + key);
@@ -47,6 +48,61 @@
     loaded = false;
     files = await fetchFiles(folderType, comfyUrl, folderPath);
     loaded = true;
+  }
+
+  export async function loadGameOptions() {
+    const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/game/options', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: "{}",
+    });
+    const ret = await res.json();
+    if (ret.status === 200) {
+      games = ret.data.list;
+    }
+  }
+
+  export async function loadUserOptions() {
+    const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/user/options', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: "{}",
+    });
+    const ret = await res.json();
+    if (ret.status === 200) {
+      users = ret.data.list;
+    }
+  }
+
+  export async function showUploadModal(file:any) {
+    currentFile = file;
+    await loadUserOptions();
+    await loadGameOptions();
+    uploadModal.showModal();
+  }
+
+  export async function uploadFile() {
+    const formData = new FormData();
+    formData.append('name', name); 
+    formData.append('nickname', userId); 
+    formData.append('gameId', gameId); 
+    formData.append('tags', tags); 
+    formData.append('file', currentFile); 
+    const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formData,
+    });
+    const ret = await res.json();
+    if (ret.status === 200) {
+      console.log(ret)
+    }
   }
 
   onMount(async () => {
@@ -176,7 +232,7 @@
             >
             <button
               class="btn btn-link btn-sm p-0 no-underline text-accent"
-              on:click={() => uploadModal.showModal()}
+              on:click={() => showUploadModal(file)}
               >{$t('common.btn.upload')}</button
             >
           {/if}
@@ -228,7 +284,11 @@
 </button>
 {/if}
 
-<div on:click={() => uploadModal.showModal()}>
+<div on:click={async () => {
+  await loadUserOptions()
+  await loadGameOptions()
+  uploadModal.showModal()
+}}>
   点击
 </div>
 
@@ -254,7 +314,20 @@
         bind:value={gameId}
       >
         {#each games as game}
-          <option value={game.value}>{game.text}</option>
+          <option value={game.id}>{game.name}</option>
+        {/each}
+      </select>
+    </div>
+    <div class="form-control w-full">
+      <div class="label">
+        <span class="label-text">* 制作人</span>
+      </div>
+      <select
+        class="select select-bordered max-w-xs"
+        bind:value={userId}
+      >
+        {#each users as user}
+          <option value={user.nickname}>{user.nickname}</option>
         {/each}
       </select>
     </div>
@@ -270,7 +343,7 @@
     </div>
     <button
       class="btn btn-secondary btn-outline w-36"
-      on:click={() => uploadModal.close()}
+      on:click={() => uploadFile()}
     >
       上传
     </button>
