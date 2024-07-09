@@ -86,10 +86,23 @@
   }
 
   export async function uploadFile() {
+    if (!name) {
+      toast.show(false, "", "素材名称不能为空！");
+      return;
+    }
+    if (!gameId) {
+      toast.show(false, "", "游戏项目不能为空！");
+      return;
+    }
+    if (!userId) {
+      toast.show(false, "", "制作人不能为空！");
+      return;
+    }
+    console.log(currentFile)
     const formData = new FormData();
     formData.append('name', name); 
-    formData.append('nickname', userId); 
     formData.append('gameId', gameId); 
+    formData.append('nickname', userId); 
     formData.append('tags', tags); 
     formData.append('file', currentFile); 
     const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
@@ -333,7 +346,7 @@
     </div>
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text">* 标签(多个标签按照逗号分割)</span>
+        <span class="label-text"> 标签(多个标签按照逗号分割)</span>
       </div>
       <input
         type="text"
