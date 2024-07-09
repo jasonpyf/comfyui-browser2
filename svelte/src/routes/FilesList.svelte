@@ -110,7 +110,7 @@
     const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
       body: formData,
     });
