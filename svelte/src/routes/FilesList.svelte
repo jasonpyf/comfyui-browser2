@@ -100,6 +100,7 @@
     }
     const file = await fetch(comfyUrl + currentFile.url);
     const fileData = await file.blob();
+    console.log(fileData)
     const formData = new FormData();
     formData.append('name', name); 
     formData.append('gameId', gameId); 
