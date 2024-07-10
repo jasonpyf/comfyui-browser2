@@ -25,6 +25,7 @@
   let loaded: boolean = true;
   let uploadUrl = "http://nuwa.datawing.qcwanwan.com";
   let uploadModal: any;
+  let uploading: boolean = false;
   let showCursor = 20;
   let searchQuery = '';
   let searchRegex = new RegExp('');
@@ -80,6 +81,13 @@
 
   export async function showUploadModal(file:any) {
     currentFile = file;
+
+    // 重置表单
+    name = null;
+    gameId = null;
+    userId = null;
+    tags = null;
+
     await loadUserOptions();
     await loadGameOptions();
     uploadModal.showModal();
@@ -98,34 +106,37 @@
       toast.show(false, "", "制作人不能为空！");
       return;
     }
-    const fileData = await fetch(comfyUrl + currentFile.url);
-    if (!fileData.body) {
-      return;
+
+    uploading = true;
+
+    try {
+      const fileData = await fetch(currentFile.url);
+      const fileBlob = await fileData.blob();
+      const file = new File([fileBlob], currentFile.name, { type: fileBlob.type });
+      const formData = new FormData();
+      formData.append('name', name); 
+      formData.append('gameId', gameId); 
+      formData.append('nickname', userId); 
+      formData.append('tags', tags); 
+      formData.append('file', file); 
+      const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const ret = await res.json();
+      if (ret.status === 200) {
+        toast.show(true, ret.message, "");
+        uploadModal.close();
+      } else {
+        toast.show(false, "", ret.error);
+        uploadModal.close();
+      }
+    } catch (e) {
+      toast.show(false, "", `{e}`);
+      uploadModal.close();
     }
-    const array = await fileData.body.getReader().read();
-    if (!array.value) {
-      return;
-    }
-    const blob = new Blob([array.value], {type: currentFile.type});
-    const file = new File([blob], currentFile.name, { type: currentFile.type });
-    console.log(fileData)
-    const formData = new FormData();
-    formData.append('name', name); 
-    formData.append('gameId', gameId); 
-    formData.append('nickname', userId); 
-    formData.append('tags', tags); 
-    formData.append('file', file); 
-    const res = await fetch(uploadUrl + '/nuwa/workshop/v3/api-open/ai/material/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    });
-    const ret = await res.json();
-    if (ret.status === 200) {
-      console.log(ret)
-    }
+
+    uploading = false;
   }
 
   onMount(async () => {
@@ -253,12 +264,12 @@
               on:click={async () => await onLoadWorkflow(file, comfyApp, toast)}
               >{$t('common.btn.load')}</button
             >
-            <button
+          {/if}
+          <button
               class="btn btn-link btn-sm p-0 no-underline text-accent"
               on:click={() => showUploadModal(file)}
               >{$t('common.btn.upload')}</button
             >
-          {/if}
           <button
             class="btn btn-link btn-sm p-0 no-underline text-accent"
             on:click={async () => await onCollect(file)}
@@ -307,20 +318,12 @@
 </button>
 {/if}
 
-<div on:click={async () => {
-  await loadUserOptions()
-  await loadGameOptions()
-  uploadModal.showModal()
-}}>
-  点击
-</div>
-
 <!-- Open the modal using ID.showModal() method -->
 <dialog class="modal" bind:this={uploadModal}>
   <div class="border-gray-300 border-2 px-5 py-5 w-1/2 space-y-4" style="background-color: #353535;">
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text">* 素材名称</span>
+        <span class="label-text">* {$t('filesList.upload.name')}</span>
       </div>
       <input
         type="text"
@@ -330,7 +333,7 @@
     </div>
     <div class="form-control w-full">
       <div class="label">
-        <span class="label-text">* 游戏项目</span>
+        <span class="label-text">* {$t('filesList.upload.game')}</span>
       </div>
       <select
         class="select select-bordered max-w-xs"
@@ -343,7 +346,7 @@
     </div>
     <div class="form-control w-full">
       <div class="label">
-        <span class="label-text">* 制作人</span>
+        <span class="label-text">* {$t('filesList.upload.user')}</span>
       </div>
       <select
         class="select select-bordered max-w-xs"
@@ -356,7 +359,7 @@
     </div>
     <div class="form-control w-full max-w-2xl">
       <div class="label">
-        <span class="label-text"> 标签(多个标签按照逗号分割)</span>
+        <span class="label-text"> {$t('filesList.upload.tags')}</span>
       </div>
       <input
         type="text"
@@ -367,14 +370,16 @@
     <button
       class="btn btn-secondary btn-outline w-36"
       on:click={() => uploadFile()}
+      disabled={uploading}
     >
-      上传
+      {$t('common.btn.upload')}
     </button>
     <button
       class="btn btn-secondary btn-outline w-36"
       on:click={() => uploadModal.close()}
+      disabled={uploading}
     >
-      取消
+    {$t('common.btn.cancel')}
     </button>
   </div>
 </dialog>

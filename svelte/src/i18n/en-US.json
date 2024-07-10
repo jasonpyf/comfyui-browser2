@@ -15,7 +15,8 @@
       "upload": "Upload",
       "delete": "Delete",
       "add": "Add",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "cancel": "Cancel"
     }
   },
   "collectionsTab": {
@@ -54,7 +55,13 @@
     "Failed to add to Saves": "Failed to add to Saves. Please check the ComfyUI server.",
     "You want to delete this file?": "You want to delete this file?",
     "Deleted the file": "Deleted the file ",
-    "Failed to delete the file": "Failed to delete the file. Please check the ComfyUI server."
+    "Failed to delete the file": "Failed to delete the file. Please check the ComfyUI server.",
+    "upload": {
+      "name": "Name",
+      "game": "Game",
+      "user": "User",
+      "tags": "Tags"
+    }
   },
   "downloadHistory": {
     "Auto Refresh": "Auto Refresh"
