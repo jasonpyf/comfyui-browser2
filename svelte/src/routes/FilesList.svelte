@@ -83,10 +83,10 @@
     currentFile = file;
 
     // 重置表单
-    name = null;
-    gameId = null;
-    userId = null;
-    tags = null;
+    // name = null;
+    // gameId = null;
+    // userId = null;
+    // tags = null;
 
     await loadUserOptions();
     await loadGameOptions();
