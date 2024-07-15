@@ -23,7 +23,7 @@
   let comfyApp: any;
   let files: Array<any> = [];
   let loaded: boolean = true;
-  let uploadUrl = "http://nuwa.datawing.qcwanwan.com";
+  let uploadUrl = "http://nuwa.datawing.zhangyou.com";
   let uploadModal: any;
   let uploading: boolean = false;
   let showCursor = 20;
